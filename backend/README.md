@@ -4,7 +4,7 @@
 t.string :name 
 t.references :user
 */
-Post
+Idea
   belongs_to :user
   has_many :comment
 
@@ -13,9 +13,9 @@ t.string :name
 t.text :notes
 t.boolean :complete 
 t.references :user
-t.references :post
+t.references :idea
 */
 Comment
   belongs_to :user
-  belongs_to :post
+  belongs_to :idea
 ```
