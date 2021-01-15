@@ -5,12 +5,15 @@ class IdeaListsController < ApplicationController
   def index
     @idea_lists = current_user.idea_lists
 
-    render json: IdeaListSerializer.new(@idea_lists).serializable_hash[:data].map{|il| il[attributes]}
+    render json: IdeaListSerializer.new(@idea_lists).serializable_hash[:data].map{|hash| hash[attributes]}
   end
 
   # GET /idea_lists/1
   def show
-    render json: @idea_list
+    render json: {
+      id: params[:id],
+      IdeaListCommentSerializer.new(@idea_list, include: [:task]).serializable_hash[:included].map{|hash| hash[:attributes]
+    }
   end
 
   # POST /idea_lists
