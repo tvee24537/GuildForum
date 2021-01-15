@@ -13,7 +13,7 @@ class IdeaList {
     </section>
     */
     static container() {
-      return this.c ||= document.querySelector("#ideaListsContainer") //'this' is calling the class itself
+      return this.c ||= document.querySelector("#lists") //'this' is calling the class itself
     }
     /*
     IdeaList.list() returns a reference to this DOM node:
@@ -41,7 +41,10 @@ class IdeaList {
                 }
             })
             .then(ideaListArray => {
-                console.log(this); // store objects
+                this.collection = ideaListArray.map(attrs => new IdeaList(attrs))
+                let renderedLists = this.collection.map(ideaList => ideaList.render())
+                this.container().append(...renderedLists);
+                return this.collection
             })
     }
     /*
@@ -65,7 +68,7 @@ class IdeaList {
         this.editLink.innerHTML = '<i class="fa fa-trash-alt"></i>';
 
         this.deleteLink ||= document.createElement('a');
-        this.deleteLink.class = "my-4 text-right";
+        this.deleteLink.classList.add(..."my-4 text-right".split(" "));
         this.deleteLink.innerHTML = '<i class="fa fa-trash-alt"></i>';
 
         this.element.append(this.nameLink, this.editLink, this.deleteLink);
