@@ -109,10 +109,26 @@ class IdeaList {
                 return res.text().then(error => Promise.reject(error)) // return a reject promise so we skip the then and go to catch
             }
         })
-        .then(data => {
-            
+        .then(({id, commentsAttributes}) => {  //pull id and comment attributes keys and assign to variable for use later
+            console.log('inside callback')
+            Comment.loadByList(id, commentsAttributes) // load up comment
+            this.markActive()
         })
     }
+    /*
+    ideaList.markActive() set active property on previous active list to false and call render on it to update it's bg color
+    Then set current idealist to be IdeaList.activeList and sets active prop to true and render on a darker bg color.
+    */
+   markActive() {
+       if(IdeaList.activeList) {
+        IdeaList.activeList.active = false;
+        IdeaList.activeList.element.classList.replace('bg-green-400', 'bg-green-200');
+
+       }
+       IdeaList.activeList = this;
+       this.active = true;
+       this.element.classList.replace('bg-green-200', 'bg-green-400');
+   }
     /*
     ideaList.render() will create li element and assign it to this.element which will fill element with content like below:
     <li class="my-2 px-4 bg-green-200 grid grid-cols-12 sm:grid-cols-6">
@@ -123,7 +139,7 @@ class IdeaList {
     */
     render() {
         this.element ||= document.createElement('li');
-        this.element.classList.add(..."my-2 px-4 bg-green-200 grid grid-cols-12 sm:grid-cols-6".split(" "));
+        this.element.classList.add(...`my-2 px-4 'bg-green-200' grid grid-cols-12 sm:grid-cols-6`.split(" "));
         
         this.nameLink ||= document.createElement('a');
         this.nameLink.classList.add(..."py-4 col-span-10 sm:col-span-4 selectIdeaList".split(""));
