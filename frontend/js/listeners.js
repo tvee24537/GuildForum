@@ -15,19 +15,17 @@
     let target = e.target; 
     if(target.matches('#newIdeaList')) {
         e.preventDefault();
-        let nameInput = target.querySelector('input[name="name"]');
-        let formData = {
-            name: nameInput.value
-        };
-        IdeaList.create({idea_list: formData})
-            .then(() => nameInput.value = "");
-        } else if (target.matches('.editIdeaListForm')) {
+        let formData = {}
+        target.querySelectorAll('input').forEach(function(input) {
+          formData[input.name] = input.value
+        })
+        IdeaList.create(formData)
+        } else if (target.matches('#newCommentForm')) {
             e.preventDefault();
-            let nameInput = target.querySelector('input[name="name"]');
-            let formData = {
-              name: nameInput.value
-            };
-            let list = IdeaList.findById(target.dataset.ideaListId);
-            list.update({idea_list: formData});
+            let formData = {};
+            target.querySelectorAll('input').forEach(function(input) {
+              formData[input.name] = input.value;
+            });
+            Comment.create(formData);
         }
   })        

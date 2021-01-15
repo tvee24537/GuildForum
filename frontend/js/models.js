@@ -114,6 +114,9 @@ class IdeaList {
             Comment.loadByList(id, commentsAttributes) // load up comment
             this.markActive()
         })
+        .catch(err => {
+            return res.test().then(error => Promise.reject(err))
+        })
     }
     /*
     ideaList.markActive() set active property on previous active list to false and call render on it to update it's bg color
@@ -186,6 +189,31 @@ class IdeaList {
        let rendered = comments.map(comment => comment.render())
        this.container().innerHTML = "";
        this.container().append(...rendered)
+   }
+   /*
+    Comment.create(formData) => 
+    make fetch request using form data and active_idea_list_id to create a new comment instance
+    if response is ok, parse it as JSON and return it
+    we'll use data we parsed to create a new comment instance, store it render it and add it to DOM at container()
+    if response is not ok, return a rejected promise for error and catch it with callback which will display it in FlashMessage.
+   */
+   static create(formData) {
+       if(!Comment.active_idea_list_id) {
+           return new FlashMessage({type: 'error', message: "Please select an Idea before adding a comment"});
+       } else {
+           formData.idea_list_id = Comment.active_idea_list_id;
+       }
+       console.log(formData);
+       return fetch('/comments', {
+           method: 'POST',
+           headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+           },
+           body: JSON.stringify({
+               comment: formData
+           })
+       })
    }
    /*
     <li class="my-2 px-4 bg-green-200 grid grid-cols-12">
