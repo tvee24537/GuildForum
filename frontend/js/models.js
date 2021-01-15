@@ -169,6 +169,54 @@ class IdeaList {
     static container() {
       return this.c ||= document.querySelector("#comments")
     }
+
+    static collection() {
+        return this.coll ||= {};
+    }
+    /*
+    static loadByList(id, commentsAttributes) =>
+    create comment instances using commentsAttributes and call render on each of the instances to build associated DOM node
+    clear out container() contents, append the rendered instances to container
+    mark id as active_idea_list_id (for new comment submission later)
+    */
+   static loadByList(id, commentsAttributes) {
+       Comment.active_idea_list_id = id;
+       let comments = commentsAttributes.map(commentsAttributes => new Comment(commentsAttributes));
+       this.collection()[id] = comments;
+       let rendered = comments.map(comment => comment.render())
+       this.container().innerHTML = "";
+       this.container().append(...rendered)
+   }
+   /*
+    <li class="my-2 px-4 bg-green-200 grid grid-cols-12">
+        <a href="#" class="py-4 col-span-10">My Comment</a>
+        <a href="#" class="my-4 text-right"><i class="fa fa-pencil-alt"></i></a>
+        <a href="#" class="my-4 text-right"><i class="fa fa-trash-alt"></i></a>
+    </li>
+    */
+   render() {
+       this.element ||= document.createElement('li');
+       this.element.classList.add(..."my-2 px-4 bg-green-200 grid grid-cols-12".split(" "));
+    /*
+       this.markCompleteLink ||= document.createElement('a');
+       this.markCompleteLink.classList.add(..."my-4 text-center".split(" "));
+       this.markCompleteLink.innerHTML = `<i class="p-4 far fa-circle"></i>`;
+    */
+       this.nameSpan ||= document.createElement('span');
+       this.nameSpan.classList.add(..."py-4 col-span-9".split(" "));
+       this.nameSpan.textContent = this.name;
+
+       this.editLink ||= document.createElement('a');
+       this.editLink.classList.add(..."my-1 text-right".split(" "));
+       this.editLink.innerHTML = '<i class="p-4 fa fa-trash-alt"></i>';
+
+       this.deleteLink ||= document.createElement('a');
+       this.deleteLink.classList.add(..."my-1 text-right".split(" "));
+       this.deleteLink.innerHTML = '<i class="p-4 fa fa-trash-alt"></i>';
+
+       this.element.append(/*this.markCompleteLink, */ this.nameSpan, this.editLink, this.deleteLink);
+       return this.element;
+   }
   }
 
  class FlashMessage { // flash message red if error, blue if not
@@ -182,6 +230,7 @@ class IdeaList {
         return this.c ||= document.querySelector('#flash')
     }
 
+    
     render() { // put message in display
         this.toggleMessage();
         window.setTimeout(() => this.toggleMessage(), 5000);
