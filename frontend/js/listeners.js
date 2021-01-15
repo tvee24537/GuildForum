@@ -6,8 +6,11 @@
   document.addEventListener('click', function(e) {
     let target = e.target; 
     if (target.matches(".selectIdeaList")) {
-      let ideaList = IdeaList.findById(target.dataset.ideaListId) //find idea with selected Id and show it
-      ideaList.show()
+      let ideaList = IdeaList.findById(target.dataset.ideaListId); //find idea with selected Id and show it
+      ideaList.show();
+    } else if (target.matches(".toggleComplete")) {
+      let comment = Comment.findById(target.dataset.commentId);
+      comment.toggleComplete();
     }
   })
 

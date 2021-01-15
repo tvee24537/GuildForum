@@ -176,6 +176,10 @@ class IdeaList {
     static collection() {
         return this.coll ||= {};
     }
+
+    static findById(id) {
+        return this.collection()[Comment.active_idea_list_id].find(comment => comment.id == id)
+    }
     /*
     static loadByList(id, commentsAttributes) =>
     create comment instances using commentsAttributes and call render on each of the instances to build associated DOM node
@@ -229,8 +233,36 @@ class IdeaList {
         })
 
         .catch(error => {
-            new FlashMessage({type: 'error', message: error});
+            return new FlashMessage({type: 'error', message: error});
         })
+   }
+
+   toggleComplete() {
+    fetch(`http://localhost:3000/comments/${this.id}`), {
+        method: 'PUT',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            comment: { completed: !this.completed }
+        })
+        .then(res => {
+            if(res.ok) {
+                return res.json() // return a promise of body content parsed as JSON
+            } else {
+                return res.text().then(error => Promise.reject(error)) // return a reject promise so we skip the then and go to catch
+            }
+        })
+        .then(commentsAttributes => {
+            Object.keys(commentsAttributes.forEach(attr => this[attr]) = commentsAttributes[attr])
+            this.render();
+        })
+
+        .catch(error => {
+            return new FlashMessage({type: 'error', message: error});
+        })
+    }
    }
    /*
     <li class="my-2 px-4 bg-green-200 grid grid-cols-12">
@@ -242,11 +274,11 @@ class IdeaList {
    render() {
        this.element ||= document.createElement('li');
        this.element.classList.add(..."my-2 px-4 bg-green-200 grid grid-cols-12".split(" "));
-    /*
+    
        this.markCompleteLink ||= document.createElement('a');
        this.markCompleteLink.classList.add(..."my-4 text-center".split(" "));
-       this.markCompleteLink.innerHTML = `<i class="p-4 far fa-circle"></i>`;
-    */
+       this.markCompleteLink.innerHTML = `<i class="toggleComplete p-4 far fa-circle" data-task-id="${this.id}"></i>`;
+    
        this.nameSpan ||= document.createElement('span');
        this.nameSpan.classList.add(..."py-4 col-span-9".split(" "));
        this.nameSpan.textContent = this.name;
@@ -259,7 +291,7 @@ class IdeaList {
        this.deleteLink.classList.add(..."my-1 text-right".split(" "));
        this.deleteLink.innerHTML = '<i class="p-4 fa fa-trash-alt"></i>';
 
-       this.element.append(/*this.markCompleteLink, */ this.nameSpan, this.editLink, this.deleteLink);
+       this.element.append(this.markCompleteLink, this.nameSpan, this.editLink, this.deleteLink);
        return this.element;
    }
   }
