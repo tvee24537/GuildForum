@@ -214,6 +214,23 @@ class IdeaList {
                comment: formData
            })
        })
+        .then(res => {
+            if(res.ok) {
+                return res.json() // return a promise of body content parsed as JSON
+            } else {
+                return res.text().then(error => Promise.reject(error)) // return a reject promise so we skip the then and go to catch
+            }
+        })
+        .then(commentData => {
+            let comment = new Comment(commentData);
+            this.collection()[Comment.active_idea_list_id].push(comment);
+            this.container().append(comment.render())
+            return comment;
+        })
+
+        .catch(error => {
+            new FlashMessage({type: 'error', message: error});
+        })
    }
    /*
     <li class="my-2 px-4 bg-green-200 grid grid-cols-12">
