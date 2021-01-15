@@ -3,9 +3,9 @@ class IdeaListsController < ApplicationController
 
   # GET /idea_lists
   def index
-    @idea_lists = IdeaList.all
+    @idea_lists = current_user.idea_lists
 
-    render json: @idea_lists
+    render json: IdeaListSerializer.new(@idea_lists).serializable_hash[:data].map{|il| il[attributes]}
   end
 
   # GET /idea_lists/1
