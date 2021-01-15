@@ -13,7 +13,7 @@ class IdeaList {
     </section>
     */
     static container() {
-      return this.c ||= document.querySelector("#lists") //'this' is calling the class itself
+      return this.c ||= document.querySelector("#ideaListsContainer") //'this' is calling the class itself
     }
     /*
     IdeaList.list() returns a reference to this DOM node:
@@ -46,6 +46,34 @@ class IdeaList {
                 this.container().append(...renderedLists);
                 return this.collection
             })
+    }
+
+    static create(formData) {
+        return fetch("http://localhost:3000/idea_lists", {
+            method: 'POST', //default is get
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({idea_list: formData}) // make object a string
+        })
+        .then(res => {
+            if(res.ok) {
+                return res.json() // return a promise of body content parsed as JSON
+            } else {
+                return res.text().then(error => Promise.reject(error)) // return a reject promise so we skip the then and go to catch
+            }
+        })
+        .then(ideaListAttributes => {
+            let ideaList = new IdeaList(ideaListAttributes);
+            this.collection.push(ideaList);
+            this.container().appendChild(ideaList.render()) // appendchild only append one node and only node objects
+            new FlashMessage({type: 'success', message: 'New Idea added successfully' })
+            return ideaList;
+        })
+        .catch(error => {
+            new FlashMessage({type: 'error', message: error});
+        })
     }
     /*
     ideaList.render() will create li element and assign it to this.element which will fill element with content like below:
@@ -87,3 +115,27 @@ class IdeaList {
       return this.c ||= document.querySelector("#comments")
     }
   }
+
+ class FlashMessage { // flash message red if error, blue if not
+    constructor({type, message}) {
+        this.message = message;
+        this.color = type == "error" ? 'bg-red-200' :'bg-blue-100';
+        this.render();
+    }
+
+    static container() {
+        return this.c ||= document.querySelector('#flash')
+    }
+
+    render() { // put message in display
+        this.toggleMessage();
+        window.setTimeout(() => this.toggleMessage(), 5000);
+
+    }
+    toggleMessage() {
+        console.log(this);
+        FlashMessage.container().textContent = this.message;
+        FlashMessage.container().classList.toggle(this.color);
+        FlashMessage.container().classList.toggle('opacity-0');
+    }
+}
