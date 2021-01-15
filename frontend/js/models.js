@@ -61,7 +61,7 @@ class IdeaList {
         this.nameLink.textContent = this.name
 
         this.editLink ||= document.createElement('a');
-        this.editLink.class = "my-4 text-right";
+        this.editLink.classList.add(..."my-4 text-right".split(" "));
         this.editLink.innerHTML = '<i class="fa fa-trash-alt"></i>';
 
         this.deleteLink ||= document.createElement('a');
