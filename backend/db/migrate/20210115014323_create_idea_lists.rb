@@ -1,6 +1,6 @@
-class CreateIdeas < ActiveRecord::Migration[6.0]
+class CreateIdeaLists < ActiveRecord::Migration[6.0]
   def change
-    create_table :ideas do |t|
+    create_table :idea_lists do |t|
       t.string :name
       t.references :user, null: false, foreign_key: true
 

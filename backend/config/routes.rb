@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :idea_lists
   resources :comments
   resources :ideas
   devise_for :users, path: '', path_names: {
