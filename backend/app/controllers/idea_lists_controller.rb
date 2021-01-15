@@ -15,12 +15,12 @@ class IdeaListsController < ApplicationController
 
   # POST /idea_lists
   def create
-    @idea_list = IdeaList.new(idea_list_params)
+    @idea_list = current_user.idea_list.build(idea_list_params)
 
     if @idea_list.save
       render json: @idea_list, status: :created, location: @idea_list
     else
-      render json: @idea_list.errors, status: :unprocessable_entity
+      render json: @idea_list.errors.full_messages.to_sentence, status: :unprocessable_entity
     end
   end
 
