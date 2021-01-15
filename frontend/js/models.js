@@ -1,7 +1,7 @@
 class Idea {
     constructor(attributes) {
       let whitelist = ["id", "name", "active"]
-      whitelist.forEach(attr => this[attr] = attributes[attr])
+      whitelist.forEach(attr => this[attr] = attributes[attr]) /*pull attr from new object that used for new idea*/
     }
     /*
     Idea.container() returns a reference to this DOM node:
@@ -13,7 +13,7 @@ class Idea {
     </section>
     */
     static container() {
-      return this.c ||= document.querySelector("#ideasContainer")
+      return this.c ||= document.querySelector("#ideasContainer") //'this' is calling the class itself
     }
     /*
     Idea.list() returns a reference to this DOM node:
@@ -22,9 +22,28 @@ class Idea {
     </ul>
     */
     static list() {
-      return this.l ||= document.querySelector('#lists')
+      return this.l ||= document.querySelector('#lists') //'this' is calling the class itself
     }
-  
+    
+    // Idea.all() will return all of the idea objects that we get from fetching to /ideas.
+    static all() {
+        return fetch("http://localhost:3000/ideas", {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if(res.ok) {
+                    return res.json() // return a promise of body content parsed as JSON
+                } else {
+                    return res.text().then(errro => Promise.reject(error)) // return a reject promise so we skip the then and go to catch
+                }
+            })
+            .then(ideaArray => {
+                
+            })
+    }
     /*
     <div
     */
@@ -35,7 +54,7 @@ class Idea {
   
   class Comment {
     constructor(attributes) {
-      let whitelist = ["id", "name", "todo_list_id", "complete", "due_by"]
+      let whitelist = ["id", "name", "idea_id"]
       whitelist.forEach(attr => this[attr] = attributes[attr])
     }
   
