@@ -199,12 +199,12 @@ class IdeaList {
    */
    static create(formData) {
        if(!Comment.active_idea_list_id) {
-           return new FlashMessage({type: 'error', message: "Please select an Idea before adding a comment"});
+           return Promise.reject().catch(() => new FlashMessage({type: 'error', message: "Please select an Idea before adding a comment"})); // catching error
        } else {
            formData.idea_list_id = Comment.active_idea_list_id;
        }
        console.log(formData);
-       return fetch('/comments', {
+       return fetch('http://localhost:3000/comments', {
            method: 'POST',
            headers: {
             "Accept": "application/json",
@@ -282,7 +282,6 @@ class IdeaList {
 
     }
     toggleMessage() {
-        console.log(this);
         FlashMessage.container().textContent = this.message;
         FlashMessage.container().classList.toggle(this.color);
         FlashMessage.container().classList.toggle('opacity-0');

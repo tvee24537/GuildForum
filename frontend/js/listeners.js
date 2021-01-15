@@ -20,12 +20,22 @@
           formData[input.name] = input.value
         })
         IdeaList.create(formData)
+          .then(() => {
+            target.querySelectorAll('input').forEach(function(input) {
+              input.value = " ";
+            })
+          });
         } else if (target.matches('#newCommentForm')) {
             e.preventDefault();
             let formData = {};
             target.querySelectorAll('input').forEach(function(input) {
               formData[input.name] = input.value;
             });
-            Comment.create(formData);
+            Comment.create(formData)
+              .then(() => {
+                target.querySelectorAll('input').forEach(function(input) {
+                  input.value = " ";
+                })
+              });
         }
   })        
