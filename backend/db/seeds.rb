@@ -9,4 +9,4 @@ user = User.first
 
 study_tasks = user.ideas.find_or_create_by(name: "Study Tasks")
 
-task_1 = user.comments.find_or_create_by(name: "learn about promises", idea_id: study_tasks.id)
+task_1 = user.comments.find_or_create_by(name: "learn about promises", idea_list_id: study_tasks.id)

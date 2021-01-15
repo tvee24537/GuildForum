@@ -6,6 +6,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
-  has_many :idea
-  has_many :comment       
+  has_many :idea_lists
+  has_many :comments       
 end
