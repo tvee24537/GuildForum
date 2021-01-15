@@ -15,12 +15,12 @@ class CommentsController < ApplicationController
 
   # POST /comments
   def create
-    @comment = Comment.new(comment_params)
+    @comment = current_user.comments.build(comment_params)
 
     if @comment.save
-      render json: @comment, status: :created, location: @comment
+      render json: CommentSerializer.new(@comment).serializable_hash[:data][:attributes], status: :created, location: @comment
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render json: @comment.errors.full_messages.to_sentence, status: :unprocessable_entity
     end
   end
 
