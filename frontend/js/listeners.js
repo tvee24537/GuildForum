@@ -4,11 +4,10 @@
   })
 
   document.addEventListener('click', function(e) {
-    console.dir(e.target)
     let target = e.target; 
-    if (target.matches('.editIdeaList')) {
-      let list = IdeaList.findById(target.dataset.ideaListId);
-      list.edit();
+    if (target.matches(".selectIdeaList")) {
+      let ideaList = IdeaList.findById(target.dataset.ideaListId) //find idea with selected Id and show it
+      ideaList.show()
     }
   })
 
